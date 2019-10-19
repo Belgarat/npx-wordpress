@@ -29,7 +29,10 @@ export class NgxWordpressService {
     return this.http.get<any[]>(`${this.baseUrl}/posts`, requestOptions).pipe(
       map(posts => {
         for (let post of posts) {
-          post.media_url = post['_embedded']['wp:featuredmedia'][0]['media_details'].sizes['medium'].source_url;
+          // check if exist. fix the error: ngx-wordpress-api ERROR TypeError: Cannot read property '0' of undefined
+          if(post['_embedded']['wp:featuredmedia']) {
+            post.media_url = post['_embedded']['wp:featuredmedia'][0]['media_details'].sizes['medium'].source_url;
+          }
         }
         return posts;
       })
